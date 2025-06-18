@@ -1,0 +1,113 @@
+import { initMap, updateMarker, useMyLocation } from './map.js';
+import { setupQuiz } from './quiz.js';
+
+export function dmsToDd(deg, min, sec, hem) {
+  const sign = hem === 'S' || hem === 'W' ? -1 : 1;
+  return sign * (Number(deg) + Number(min) / 60 + Number(sec) / 3600);
+}
+
+function ddToDms(dd, isLat) {
+  const sign = dd < 0 ? -1 : 1;
+  const abs = Math.abs(dd);
+  const deg = Math.floor(abs);
+  const minF = (abs - deg) * 60;
+  const min = Math.floor(minF);
+  const sec = +(minF - min) * 60;
+  const hem = isLat ? (sign > 0 ? 'N' : 'S') : (sign > 0 ? 'E' : 'W');
+  return { deg, min, sec: +sec.toFixed(3), hem };
+}
+
+function renderMath(deg, min, sec, hem) {
+  const dd = dmsToDd(deg, min, sec, hem);
+  mathDisplay.textContent = `${hem === 'S' || hem === 'W' ? '-' : ''}(${deg} + ${min}/60 + ${sec}/3600) = ${dd.toFixed(6)}`;
+}
+
+const latDeg = document.getElementById('lat-deg');
+const latMin = document.getElementById('lat-min');
+const latSec = document.getElementById('lat-sec');
+const latHem = document.getElementById('lat-hem');
+const lonDeg = document.getElementById('lon-deg');
+const lonMin = document.getElementById('lon-min');
+const lonSec = document.getElementById('lon-sec');
+const lonHem = document.getElementById('lon-hem');
+const ddLat = document.getElementById('dd-lat');
+const ddLon = document.getElementById('dd-lon');
+const ddInLat = document.getElementById('dd-in-lat');
+const ddInLon = document.getElementById('dd-in-lon');
+const dmsOutLat = document.getElementById('dms-out-lat');
+const dmsOutLon = document.getElementById('dms-out-lon');
+const dmsForm = document.getElementById('dms-form');
+const ddForm = document.getElementById('dd-form');
+const mathDisplay = document.getElementById('math-display');
+
+function validateDms(deg, min, sec) {
+  if (min < 0 || min >= 60) return false;
+  if (sec < 0 || sec >= 60) return false;
+  return true;
+}
+
+function updateFromDms() {
+  const latValid = validateDms(+latDeg.value, +latMin.value, +latSec.value);
+  const lonValid = validateDms(+lonDeg.value, +lonMin.value, +lonSec.value);
+  document.getElementById('lat-error').textContent = latValid ? '' : 'Invalid';
+  document.getElementById('lon-error').textContent = lonValid ? '' : 'Invalid';
+  if (!latValid || !lonValid) return;
+  const lat = dmsToDd(latDeg.value, latMin.value, latSec.value, latHem.value);
+  const lon = dmsToDd(lonDeg.value, lonMin.value, lonSec.value, lonHem.value);
+  ddLat.value = lat.toFixed(6);
+  ddLon.value = lon.toFixed(6);
+  renderMath(latDeg.value, latMin.value, latSec.value, latHem.value);
+  updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+}
+
+function updateFromDd() {
+  const lat = parseFloat(ddInLat.value);
+  const lon = parseFloat(ddInLon.value);
+  if (isNaN(lat) || isNaN(lon)) return;
+  const latDms = ddToDms(lat, true);
+  const lonDms = ddToDms(lon, false);
+  dmsOutLat.value = `${latDms.deg}° ${latDms.min}' ${latDms.sec}" ${latDms.hem}`;
+  dmsOutLon.value = `${lonDms.deg}° ${lonDms.min}' ${lonDms.sec}" ${lonDms.hem}`;
+  renderMath(latDms.deg, latDms.min, latDms.sec, latDms.hem);
+  updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+}
+
+function toggleMode(e) {
+  const mode = e.target.value;
+  if (mode === 'dms2dd') {
+    dmsForm.classList.remove('hidden');
+    ddForm.classList.add('hidden');
+  } else {
+    ddForm.classList.remove('hidden');
+    dmsForm.classList.add('hidden');
+  }
+}
+
+function attachEvents() {
+  [latDeg, latMin, latSec, latHem, lonDeg, lonMin, lonSec, lonHem].forEach(el => {
+    el.addEventListener('input', updateFromDms);
+  });
+  [ddInLat, ddInLon].forEach(el => el.addEventListener('input', updateFromDd));
+  document.querySelectorAll('input[name="mode"]').forEach(el => el.addEventListener('change', toggleMode));
+  document.getElementById('show-map').addEventListener('click', () => {
+    const lat = parseFloat(ddLat.value);
+    const lon = parseFloat(ddLon.value);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+    }
+  });
+  document.getElementById('locate').addEventListener('click', useMyLocation);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initMap();
+  attachEvents();
+  setupQuiz();
+  setInterval(() => {
+    if (dmsForm.classList.contains('hidden')) {
+      updateFromDd();
+    } else {
+      updateFromDms();
+    }
+  }, 33);
+});

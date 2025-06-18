@@ -1,1 +1,114 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMS 2 DD Calculator</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-o9N1jE2+r4k0fy0B4irTDo7GCsKqeevy+r9Ym32o0Xo="
+    crossorigin=""
+  />
+</head>
+<body>
+  <header>
+    <h1>DMS 2 DD Calculator</h1>
+  </header>
+  <main>
+    <section id="converter" class="panel">
+      <div class="mode-toggle">
+        <label>
+          <input type="radio" name="mode" value="dms2dd" checked />
+          DMS → DD
+        </label>
+        <label>
+          <input type="radio" name="mode" value="dd2dms" />
+          DD → DMS
+        </label>
+      </div>
+      <form id="dms-form" class="converter-form">
+        <fieldset>
+          <legend>Latitude</legend>
+          <input type="number" step="1" id="lat-deg" placeholder="°" />
+          <input type="number" step="1" id="lat-min" placeholder="′" />
+          <input type="number" step="0.001" id="lat-sec" placeholder="″" />
+          <select id="lat-hem">
+            <option value="N">N</option>
+            <option value="S">S</option>
+          </select>
+          <span class="error" id="lat-error"></span>
+        </fieldset>
+        <fieldset>
+          <legend>Longitude</legend>
+          <input type="number" step="1" id="lon-deg" placeholder="°" />
+          <input type="number" step="1" id="lon-min" placeholder="′" />
+          <input type="number" step="0.001" id="lon-sec" placeholder="″" />
+          <select id="lon-hem">
+            <option value="E">E</option>
+            <option value="W">W</option>
+          </select>
+          <span class="error" id="lon-error"></span>
+        </fieldset>
+        <div class="output">
+          <label for="dd-lat">Latitude DD</label>
+          <input type="text" id="dd-lat" readonly />
+          <label for="dd-lon">Longitude DD</label>
+          <input type="text" id="dd-lon" readonly />
+        </div>
+      </form>
+      <form id="dd-form" class="converter-form hidden">
+        <label for="dd-in-lat">Latitude DD</label>
+        <input type="number" step="0.000001" id="dd-in-lat" />
+        <label for="dd-in-lon">Longitude DD</label>
+        <input type="number" step="0.000001" id="dd-in-lon" />
+        <fieldset>
+          <legend>Latitude</legend>
+          <input type="text" id="dms-out-lat" readonly />
+        </fieldset>
+        <fieldset>
+          <legend>Longitude</legend>
+          <input type="text" id="dms-out-lon" readonly />
+        </fieldset>
+      </form>
+      <div class="math" aria-live="polite" id="math-display"></div>
+      <button id="show-map">Show on map</button>
+      <button id="locate">Use my location</button>
+    </section>
+    <section id="map" class="map"></section>
+    <section id="quiz" class="panel">
+      <h2>Practice</h2>
+      <button id="random-dms">Random DMS</button>
+      <button id="check-answer">Check</button>
+      <div id="score"></div>
+    </section>
+    <section id="extras" class="panel">
+      <h2>Precision by decimal place</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Decimal place</th>
+            <th>Approx. precision</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0.1°</td><td>11 km</td></tr>
+          <tr><td>0.01°</td><td>1.1 km</td></tr>
+          <tr><td>0.001°</td><td>110 m</td></tr>
+          <tr><td>0.0001°</td><td>11 m</td></tr>
+          <tr><td>0.00001°</td><td>1.1 m</td></tr>
+          <tr><td>0.000001°</td><td>0.11 m</td></tr>
+        </tbody>
+      </table>
+      <h2>History</h2>
+      <p>Nautical charts used DMS for centuries. GPS brought DD into daily use.</p>
+      <p>Both notations remain common. Accuracy suffers if you round too soon.</p>
+    </section>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-oXkYJq1lu41+PTJYwV+n6Ug1wSHELpNBGYTCri3j0No=" crossorigin=""></script>
+  <script src="js/map.js" defer></script>
+  <script src="js/quiz.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
