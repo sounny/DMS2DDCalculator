@@ -6,6 +6,16 @@ export function dmsToDd(deg, min, sec, hem) {
   return sign * (Number(deg) + Number(min) / 60 + Number(sec) / 3600);
 }
 
+export function ddToDms(value, isLat) {
+  const abs = Math.abs(value);
+  const deg = Math.floor(abs);
+  const minFloat = (abs - deg) * 60;
+  const min = Math.floor(minFloat);
+  const sec = ((minFloat - min) * 60).toFixed(3);
+  const hem = isLat ? (value >= 0 ? 'N' : 'S') : (value >= 0 ? 'E' : 'W');
+  return { deg, min, sec, hem };
+}
+
 
 function renderMath(latDegVal, latMinVal, latSecVal, latHemVal, lonDegVal, lonMinVal, lonSecVal, lonHemVal) {
   const latDD = dmsToDd(latDegVal, latMinVal, latSecVal, latHemVal);
@@ -26,6 +36,31 @@ const lonHem = document.getElementById('lon-hem');
 const ddLat = document.getElementById('dd-lat');
 const ddLon = document.getElementById('dd-lon');
 const mathDisplay = document.getElementById('math-display');
+
+function fillInputsFromDd(lat, lon) {
+  const latParts = ddToDms(lat, true);
+  const lonParts = ddToDms(lon, false);
+  latDeg.value = latParts.deg;
+  latMin.value = latParts.min;
+  latSec.value = latParts.sec;
+  latHem.value = latParts.hem;
+  lonDeg.value = lonParts.deg;
+  lonMin.value = lonParts.min;
+  lonSec.value = lonParts.sec;
+  lonHem.value = lonParts.hem;
+  ddLat.value = lat.toFixed(6);
+  ddLon.value = lon.toFixed(6);
+  renderMath(
+    latDeg.value,
+    latMin.value,
+    latSec.value,
+    latHem.value,
+    lonDeg.value,
+    lonMin.value,
+    lonSec.value,
+    lonHem.value
+  );
+}
 
 function validateDms(deg, min, sec) {
   if (min < 0 || min >= 60) return false;
@@ -60,14 +95,9 @@ function attachEvents() {
   [latDeg, latMin, latSec, latHem, lonDeg, lonMin, lonSec, lonHem].forEach(el => {
     el.addEventListener('input', updateFromDms);
   });
-  document.getElementById('show-map').addEventListener('click', () => {
-    const lat = parseFloat(ddLat.value);
-    const lon = parseFloat(ddLon.value);
-    if (!isNaN(lat) && !isNaN(lon)) {
-      updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
-    }
+  document.getElementById('locate').addEventListener('click', () => {
+    useMyLocation(fillInputsFromDd);
   });
-  document.getElementById('locate').addEventListener('click', useMyLocation);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
