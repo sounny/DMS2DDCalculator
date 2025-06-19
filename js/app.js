@@ -17,9 +17,12 @@ function ddToDms(dd, isLat) {
   return { deg, min, sec: +sec.toFixed(3), hem };
 }
 
-function renderMath(deg, min, sec, hem) {
-  const dd = dmsToDd(deg, min, sec, hem);
-  mathDisplay.textContent = `${hem === 'S' || hem === 'W' ? '-' : ''}(${deg} + ${min}/60 + ${sec}/3600) = ${dd.toFixed(6)}`;
+function renderMath(latDegVal, latMinVal, latSecVal, latHemVal, lonDegVal, lonMinVal, lonSecVal, lonHemVal) {
+  const latDD = dmsToDd(latDegVal, latMinVal, latSecVal, latHemVal);
+  const lonDD = dmsToDd(lonDegVal, lonMinVal, lonSecVal, lonHemVal);
+  mathDisplay.innerHTML =
+    `Lat: ${latHemVal === 'S' ? '-' : ''}(${latDegVal} + ${latMinVal}/60 + ${latSecVal}/3600) = ${latDD.toFixed(6)}<br>` +
+    `Lon: ${lonHemVal === 'W' ? '-' : ''}(${lonDegVal} + ${lonMinVal}/60 + ${lonSecVal}/3600) = ${lonDD.toFixed(6)}`;
 }
 
 const latDeg = document.getElementById('lat-deg');
@@ -56,7 +59,16 @@ function updateFromDms() {
   const lon = dmsToDd(lonDeg.value, lonMin.value, lonSec.value, lonHem.value);
   ddLat.value = lat.toFixed(6);
   ddLon.value = lon.toFixed(6);
-  renderMath(latDeg.value, latMin.value, latSec.value, latHem.value);
+  renderMath(
+    latDeg.value,
+    latMin.value,
+    latSec.value,
+    latHem.value,
+    lonDeg.value,
+    lonMin.value,
+    lonSec.value,
+    lonHem.value
+  );
   updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
 }
 
@@ -68,7 +80,16 @@ function updateFromDd() {
   const lonDms = ddToDms(lon, false);
   dmsOutLat.value = `${latDms.deg}° ${latDms.min}' ${latDms.sec}" ${latDms.hem}`;
   dmsOutLon.value = `${lonDms.deg}° ${lonDms.min}' ${lonDms.sec}" ${lonDms.hem}`;
-  renderMath(latDms.deg, latDms.min, latDms.sec, latDms.hem);
+  renderMath(
+    latDms.deg,
+    latDms.min,
+    latDms.sec,
+    latDms.hem,
+    lonDms.deg,
+    lonDms.min,
+    lonDms.sec,
+    lonDms.hem
+  );
   updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
 }
 

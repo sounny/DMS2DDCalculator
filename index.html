@@ -75,13 +75,18 @@
       <div class="math" aria-live="polite" id="math-display"></div>
       <button id="show-map">Show on map</button>
       <button id="locate">Use my location</button>
+      <button id="random-dms">Random DMS</button>
     </section>
     <section id="map" class="map"></section>
     <section id="quiz" class="panel">
-      <h2>Practice</h2>
-      <button id="random-dms">Random DMS</button>
-      <button id="check-answer">Check</button>
-      <div id="score"></div>
+      <img src="assets/img/formula.svg" alt="DMS to DD formula" />
+      <p>
+        Decimal degrees (DD) express latitude and longitude as decimal
+        fractions of a degree. They are common in GIS and web mapping
+        applications. Positive latitudes are north of the equator and negative
+        ones are south. Positive longitudes are east of the prime meridian and
+        negative ones are west.
+      </p>
     </section>
     <section id="extras" class="panel">
       <h2>Precision by decimal place</h2>
@@ -106,5 +111,8 @@
   </main>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script type="module" src="js/app.js"></script>
+  <footer class="footer">
+    <p><a href="https://sounny.github.io/" target="_blank" rel="noopener">Made with ❤️ by sounny</a></p>
+  </footer>
 </body>
 </html>
