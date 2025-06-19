@@ -18,16 +18,6 @@
   </header>
   <main>
     <section id="converter" class="panel">
-      <div class="mode-toggle">
-        <label>
-          <input type="radio" name="mode" value="dms2dd" checked />
-          DMS → DD
-        </label>
-        <label>
-          <input type="radio" name="mode" value="dd2dms" />
-          DD → DMS
-        </label>
-      </div>
       <form id="dms-form" class="converter-form">
         <fieldset>
           <legend>Latitude</legend>
@@ -57,20 +47,6 @@
           <label for="dd-lon">Longitude DD</label>
           <input type="text" id="dd-lon" readonly />
         </div>
-      </form>
-      <form id="dd-form" class="converter-form hidden">
-        <label for="dd-in-lat">Latitude DD</label>
-        <input type="number" step="0.000001" id="dd-in-lat" />
-        <label for="dd-in-lon">Longitude DD</label>
-        <input type="number" step="0.000001" id="dd-in-lon" />
-        <fieldset>
-          <legend>Latitude</legend>
-          <input type="text" id="dms-out-lat" readonly />
-        </fieldset>
-        <fieldset>
-          <legend>Longitude</legend>
-          <input type="text" id="dms-out-lon" readonly />
-        </fieldset>
       </form>
       <div class="math" aria-live="polite" id="math-display"></div>
       <button id="show-map">Show on map</button>
