@@ -15,7 +15,7 @@ export function updateMarker(lat, lon, text = '') {
   map.setView([lat, lon], 8);
 }
 
-export function useMyLocation() {
+export function useMyLocation(callback) {
   if (!navigator.geolocation) {
     alert('Geolocation not supported');
     return;
@@ -23,5 +23,8 @@ export function useMyLocation() {
   navigator.geolocation.getCurrentPosition(pos => {
     const { latitude, longitude } = pos.coords;
     updateMarker(latitude, longitude, 'Your location');
+    if (typeof callback === 'function') {
+      callback(latitude, longitude);
+    }
   });
 }
