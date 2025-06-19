@@ -6,16 +6,6 @@ export function dmsToDd(deg, min, sec, hem) {
   return sign * (Number(deg) + Number(min) / 60 + Number(sec) / 3600);
 }
 
-function ddToDms(dd, isLat) {
-  const sign = dd < 0 ? -1 : 1;
-  const abs = Math.abs(dd);
-  const deg = Math.floor(abs);
-  const minF = (abs - deg) * 60;
-  const min = Math.floor(minF);
-  const sec = +(minF - min) * 60;
-  const hem = isLat ? (sign > 0 ? 'N' : 'S') : (sign > 0 ? 'E' : 'W');
-  return { deg, min, sec: +sec.toFixed(3), hem };
-}
 
 function renderMath(latDegVal, latMinVal, latSecVal, latHemVal, lonDegVal, lonMinVal, lonSecVal, lonHemVal) {
   const latDD = dmsToDd(latDegVal, latMinVal, latSecVal, latHemVal);
@@ -35,12 +25,6 @@ const lonSec = document.getElementById('lon-sec');
 const lonHem = document.getElementById('lon-hem');
 const ddLat = document.getElementById('dd-lat');
 const ddLon = document.getElementById('dd-lon');
-const ddInLat = document.getElementById('dd-in-lat');
-const ddInLon = document.getElementById('dd-in-lon');
-const dmsOutLat = document.getElementById('dms-out-lat');
-const dmsOutLon = document.getElementById('dms-out-lon');
-const dmsForm = document.getElementById('dms-form');
-const ddForm = document.getElementById('dd-form');
 const mathDisplay = document.getElementById('math-display');
 
 function validateDms(deg, min, sec) {
@@ -72,44 +56,10 @@ function updateFromDms() {
   updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
 }
 
-function updateFromDd() {
-  const lat = parseFloat(ddInLat.value);
-  const lon = parseFloat(ddInLon.value);
-  if (isNaN(lat) || isNaN(lon)) return;
-  const latDms = ddToDms(lat, true);
-  const lonDms = ddToDms(lon, false);
-  dmsOutLat.value = `${latDms.deg}° ${latDms.min}' ${latDms.sec}" ${latDms.hem}`;
-  dmsOutLon.value = `${lonDms.deg}° ${lonDms.min}' ${lonDms.sec}" ${lonDms.hem}`;
-  renderMath(
-    latDms.deg,
-    latDms.min,
-    latDms.sec,
-    latDms.hem,
-    lonDms.deg,
-    lonDms.min,
-    lonDms.sec,
-    lonDms.hem
-  );
-  updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
-}
-
-function toggleMode(e) {
-  const mode = e.target.value;
-  if (mode === 'dms2dd') {
-    dmsForm.classList.remove('hidden');
-    ddForm.classList.add('hidden');
-  } else {
-    ddForm.classList.remove('hidden');
-    dmsForm.classList.add('hidden');
-  }
-}
-
 function attachEvents() {
   [latDeg, latMin, latSec, latHem, lonDeg, lonMin, lonSec, lonHem].forEach(el => {
     el.addEventListener('input', updateFromDms);
   });
-  [ddInLat, ddInLon].forEach(el => el.addEventListener('input', updateFromDd));
-  document.querySelectorAll('input[name="mode"]').forEach(el => el.addEventListener('change', toggleMode));
   document.getElementById('show-map').addEventListener('click', () => {
     const lat = parseFloat(ddLat.value);
     const lon = parseFloat(ddLon.value);
@@ -124,11 +74,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initMap();
   attachEvents();
   setupQuiz();
-  setInterval(() => {
-    if (dmsForm.classList.contains('hidden')) {
-      updateFromDd();
-    } else {
+    setInterval(() => {
       updateFromDms();
-    }
-  }, 33);
+    }, 33);
 });
