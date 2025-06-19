@@ -73,12 +73,6 @@ thead {
   background: var(--accent);
   color: #fff;
 }
-.converter-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
 .hidden {
   display: none;
 }
@@ -109,6 +103,29 @@ thead {
 .math {
   font-family: monospace;
   margin-bottom: 1rem;
+}
+.converter-form fieldset,
+.converter-form .output {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 0.5rem;
+  align-items: center;
+}
+.converter-form input,
+.converter-form select {
+  width: 100%;
+  box-sizing: border-box;
+}
+.converter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
 }
 .output input[readonly] {
   background: #eee;
