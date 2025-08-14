@@ -91,6 +91,34 @@ function updateFromDms() {
   updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
 }
 
+function randomDms() {
+  const lat = Math.random() * 180 - 90;
+  const lon = Math.random() * 360 - 180;
+  fillInputsFromDd(lat, lon);
+  updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+}
+
+async function searchLocation() {
+  const query = prompt('Enter place or address:');
+  if (!query) return;
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.length) {
+      alert('No results found');
+      return;
+    }
+    const { lat, lon, display_name } = data[0];
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lon);
+    fillInputsFromDd(latitude, longitude);
+    updateMarker(latitude, longitude, display_name);
+  } catch {
+    alert('Search failed');
+  }
+}
+
 function attachEvents() {
   [latDeg, latMin, latSec, latHem, lonDeg, lonMin, lonSec, lonHem].forEach(el => {
     el.addEventListener('input', updateFromDms);
@@ -98,6 +126,8 @@ function attachEvents() {
   document.getElementById('locate').addEventListener('click', () => {
     useMyLocation(fillInputsFromDd);
   });
+  document.getElementById('random-dms').addEventListener('click', randomDms);
+  document.getElementById('search-location').addEventListener('click', searchLocation);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
