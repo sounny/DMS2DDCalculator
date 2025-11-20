@@ -132,6 +132,28 @@ thead {
   flex-wrap: wrap;
   margin-bottom: 1rem;
 }
+.copy-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.ghost {
+  background: #eef2ff;
+  color: #1f3a8a;
+  border: 1px solid #c7d2fe;
+}
+.ghost:hover {
+  background: #dbeafe;
+}
+.copy-status {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: #155e75;
+}
+.copy-status.error {
+  color: #b91c1c;
+}
 .footer {
   text-align: center;
   margin-top: 1rem;

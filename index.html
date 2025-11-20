@@ -46,6 +46,11 @@
           <input type="text" id="dd-lat" readonly />
           <label for="dd-lon">Longitude DD</label>
           <input type="text" id="dd-lon" readonly />
+          <div class="copy-row">
+            <button type="button" class="ghost" id="copy-dd">Copy DD pair</button>
+            <button type="button" class="ghost" id="copy-dms">Copy DMS pair</button>
+          </div>
+          <p class="copy-status" id="copy-status" aria-live="polite"></p>
         </div>
       </form>
       <div class="math" aria-live="polite" id="math-display"></div>
