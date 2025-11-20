@@ -36,6 +36,7 @@ const lonHem = document.getElementById('lon-hem');
 const ddLat = document.getElementById('dd-lat');
 const ddLon = document.getElementById('dd-lon');
 const mathDisplay = document.getElementById('math-display');
+const copyStatus = document.getElementById('copy-status');
 
 function fillInputsFromDd(lat, lon) {
   const latParts = ddToDms(lat, true);
@@ -91,6 +92,21 @@ function updateFromDms() {
   updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
 }
 
+function formatDmsString() {
+  return `${latDeg.value}° ${latMin.value}' ${latSec.value}" ${latHem.value}, ${lonDeg.value}° ${lonMin.value}' ${lonSec.value}" ${lonHem.value}`;
+}
+
+async function copyText(text, label) {
+  copyStatus.classList.remove('error');
+  try {
+    await navigator.clipboard.writeText(text);
+    copyStatus.textContent = `${label} copied to clipboard.`;
+  } catch {
+    copyStatus.textContent = 'Copy failed. Try selecting and copying manually.';
+    copyStatus.classList.add('error');
+  }
+}
+
 function randomDms() {
   const lat = Math.random() * 180 - 90;
   const lon = Math.random() * 360 - 180;
@@ -128,6 +144,12 @@ function attachEvents() {
   });
   document.getElementById('random-dms').addEventListener('click', randomDms);
   document.getElementById('search-location').addEventListener('click', searchLocation);
+  document.getElementById('copy-dd').addEventListener('click', () => {
+    copyText(`${ddLat.value}, ${ddLon.value}`, 'Decimal degrees');
+  });
+  document.getElementById('copy-dms').addEventListener('click', () => {
+    copyText(formatDmsString(), 'DMS pair');
+  });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
