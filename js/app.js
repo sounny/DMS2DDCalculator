@@ -107,13 +107,6 @@ async function copyText(text, label) {
   }
 }
 
-function randomDms() {
-  const lat = Math.random() * 180 - 90;
-  const lon = Math.random() * 360 - 180;
-  fillInputsFromDd(lat, lon);
-  updateMarker(lat, lon, `${lat.toFixed(6)}, ${lon.toFixed(6)}`);
-}
-
 async function searchLocation() {
   const query = prompt('Enter place or address:');
   if (!query) return;
@@ -142,7 +135,6 @@ function attachEvents() {
   document.getElementById('locate').addEventListener('click', () => {
     useMyLocation(fillInputsFromDd);
   });
-  document.getElementById('random-dms').addEventListener('click', randomDms);
   document.getElementById('search-location').addEventListener('click', searchLocation);
   document.getElementById('copy-dd').addEventListener('click', () => {
     copyText(`${ddLat.value}, ${ddLon.value}`, 'Decimal degrees');
@@ -155,8 +147,5 @@ function attachEvents() {
 window.addEventListener('DOMContentLoaded', () => {
   initMap();
   attachEvents();
-  setupQuiz();
-    setInterval(() => {
-      updateFromDms();
-    }, 33);
+  setupQuiz(updateFromDms);
 });
