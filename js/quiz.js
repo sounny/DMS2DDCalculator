@@ -14,7 +14,7 @@ function randomCoord() {
   return { latDeg, latMin, latSec, latHem, lonDeg, lonMin, lonSec, lonHem };
 }
 
-export function newQuestion() {
+export function newQuestion(onChange) {
   current = randomCoord();
   document.getElementById('lat-deg').value = current.latDeg;
   document.getElementById('lat-min').value = current.latMin;
@@ -24,8 +24,11 @@ export function newQuestion() {
   document.getElementById('lon-min').value = current.lonMin;
   document.getElementById('lon-sec').value = current.lonSec;
   document.getElementById('lon-hem').value = current.lonHem;
+  if (typeof onChange === 'function') {
+    onChange();
+  }
 }
 
-export function setupQuiz() {
-  document.getElementById('random-dms').addEventListener('click', newQuestion);
+export function setupQuiz(onChange) {
+  document.getElementById('random-dms').addEventListener('click', () => newQuestion(onChange));
 }
